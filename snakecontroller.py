@@ -57,64 +57,60 @@ window.bind("r",restart)
 window.bind("R",restart)
 
 def run_camera_and_control():
-    global prev_x,prev_y,last_trun_time
-    T=snake.TILE
+    global prev_x, prev_y, last_turn_time
+    T = snake.TILE
     while True:
         if not vc.isOpened():
             break
-        rval,frame=vc.read()
+        rval, frame = vc.read()
         if not rval:
             continue
-        
-        frame=detector.findHands(frame,draw=True)
-        lmList=detector.findPosition(frame,draw=False)
 
-        if len(lmList)>8 and not game.gameover:
-            x_f,y_f=lmList[8][1],lmList[8][2]
+        frame = detector.findHands(frame, draw=True)
+        lmList = detector.findPosition(frame, draw=False)
 
+        if len(lmList) > 8 and not game.gameover:
+            x_f, y_f = lmList[8][1], lmList[8][2]
 
             if prev_x is not None and prev_y is not None:
-                dx=x_f-prev_x
-                dy=y_f-prev_y
+                dx = x_f - prev_x
+                dy = y_f - prev_y
 
-                if time.time()-last_turn_time >TURN_DELAY:
-                    new_vx,new_vy=game.velocityX,game.velocityY
-                    turn_registered=False
+                if time.time() - last_turn_time > TURN_DELAY:
+                    new_vx, new_vy = game.velocityX, game.velocityY
+                    turn_registered = False
 
-                    if abs(dx)>abs(dy):
-                        if dx>MOVE_THRESHOLD and game.velocityX!=-T:
-                            new_vx,new_vy=T,0           #Right
-                            turn_registered=True
-                        elif dx < -MOVE_THRESHOLD and game.velocityX != T:
-                            new_vx, new_vy = -T, 0     # Left
+                    if abs(dx) > abs(dy):
+                        if dx > MOVE_THRESHOLD and game.velocityX != -T:
+                            new_vx, new_vy = T, 0
                             turn_registered = True
-                        else:
-                            if dy<-MOVE_THRESHOLD and game.velocityY!=T:
-                                new_vx, new_vy = 0, -T     # Up 
-                                turn_registered = True
-                            elif dy > MOVE_THRESHOLD and game.velocityY != -T:
-                                new_vx, new_vy = 0, T      # Down
-                                turn_registered = True
-                if turn_registered:
-                    game.velocityX=new_vx
-                    game.velocityY=new_vy
-                    last_turn_time=time.time()
-            
-            prev_x,prev_y=x_f,y_f
-        
-        elif len(lmList)>8 and (prev_x is None and prev_y is None):
-            prev_x,prev_y=x_f,y_f
+                        elif dx < -MOVE_THRESHOLD and game.velocityX != T:
+                            new_vx, new_vy = -T, 0
+                            turn_registered = True
+                    else:
+                        if dy < -MOVE_THRESHOLD and game.velocityY != T:
+                            new_vx, new_vy = 0, -T
+                            turn_registered = True
+                        elif dy > MOVE_THRESHOLD and game.velocityY != -T:
+                            new_vx, new_vy = 0, T
+                            turn_registered = True
 
-        
-    #VIDEO DISPLAY
-        cv2.imshow("Snake Xenzia",frame)
+                    if turn_registered:
+                        game.velocityX = new_vx
+                        game.velocityY = new_vy
+                        last_turn_time = time.time()
 
-        key=cv2.waitKey(1)
-        if key==ord('q') or key==27:
-                window.quit()
-                break
-vc.release()
-cv2.destroyAllWindows()
+            prev_x, prev_y = x_f, y_f
+
+        # Always display video, regardless of hand detection
+        cv2.imshow("Snake Xenzia", frame)
+        key = cv2.waitKey(1)
+        if key == ord('q') or key == 27:
+            window.quit()
+            break
+
+    vc.release()
+    cv2.destroyAllWindows()
 
 
 def draw():
@@ -132,7 +128,7 @@ def draw():
         canvas.create_rectangle(tile.x,tile.y,tile.x+TILE,tile.y+TILE,fill="green")
 
     if game.gameover:
-        canvas.create_text(WINDOW_WIDTH/2,WINDOW_HEIGHT/2-20,FOND="Arial 20",text=f"GAME OVER | SCORE: {game.score}",fill="white")
+        canvas.create_text(WINDOW_WIDTH/2,WINDOW_HEIGHT/2-20,font="Arial 20",text=f"GAME OVER | SCORE: {game.score}",fill="white")
         canvas.create_text(WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 20, font="Arial 12", text="Press R to Restart", fill="yellow")
 
     else:
@@ -142,10 +138,10 @@ def draw():
 
 
     #MAIN
-    if __name__ == "__main__":
-        camera_thread=threading.Thread(target=run_camera_and_control,daemon=True)
-        camera_thread.start()
-        draw()
-        window.mainloop()
+if __name__ == "__main__":
+    camera_thread=threading.Thread(target=run_camera_and_control,daemon=True)
+    camera_thread.start()
+    draw()
+    window.mainloop()
 
-        print("Application closed. Clearing up resources")
+    print("Application closed. Clearing up resources")
