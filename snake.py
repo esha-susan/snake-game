@@ -28,7 +28,7 @@ class SnakeGame:
 
         self.food=self.place_food()
 
-#PLACE THE FOOD AT RANDOM POSITIONS
+    #PLACE THE FOOD AT RANDOM POSITIONS
     def place_food(self):
         while True:
             food_x=random.randint(0,COLS-1)*TILE
@@ -73,5 +73,12 @@ class SnakeGame:
                 self.score+=1
 
 
-
+    def reset(self):
+        self.snake=Tile(5*TILE,5*TILE)
+        self.snake_body=[]
+        self.velocityX=TILE
+        self.velocityY=0
+        self.score=0
+        self.gameover=False
+        self.food=self.place_food()
         
