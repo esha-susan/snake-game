@@ -36,3 +36,42 @@ class SnakeGame:
 
             if not (food_x==self.snake.x and food_y==self.snake.y)or any(t.x==food_x and t.y==food_y for t in self.snake_body):
                 return Tile(food_x,food_y)
+    
+    def move(self):
+        #UPDATE SNAKE POSITION AND CHECKS FOR COLLISION
+        if self.gameover:
+            return
+        
+        new_head_x=self.snake.x+self.velocityX
+        new_head_y=self.snake.y+self.velocityY
+
+        if new_head_x<0 or new_head_x>=WINDOW_WIDTH or new_head_y<0 or new_head_y>=WINDOW_HEIGHT:
+           self.gameover=True
+           return
+
+
+        for tile in self.snake_body:
+            if new_head_x==tile.x and new_head_y==tile.y:
+                self.gameover=True
+                return 
+
+            #EATING FOOD
+            is_eating_food=(new_head_x == self.food.x and new_head_y==self.food.y)
+
+            #UPDATE BODY IF FOOD IS EATEN
+
+            new_segment=Tile(self.snake.x,self.snake.y)
+
+            if not is_eating_food and len(self.snake_body)>0:
+                self.snake_body.pop()
+
+            self.snake.x=new_head_x
+            self.snake.y=new_head_y
+            #FOOD AND SCORE UPDATE
+            if is_eating_food:
+                self.food=self.place_food()
+                self.score+=1
+
+
+
+        
