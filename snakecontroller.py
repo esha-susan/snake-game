@@ -115,3 +115,37 @@ def run_camera_and_control():
                 break
 vc.release()
 cv2.destroyAllWindows()
+
+
+def draw():
+    game.move()
+    canvas.delete("all")
+
+    #DRAWING SNAKE FOOD
+    canvas.create_rectangle(game.food.x,game.food.y,game.food.x+TILE,game.food.y+TILE,fill="red")
+
+    #DRAWING THE SNAKE HEAD
+    canvas.create_rectangle(game.snake.x,game.snake.y,game.snake.x+TILE,game.snake.y+TILE,fill="lime green")
+
+    #DRAWING THE SNAKE BODY
+    for tile in game.snake_body:
+        canvas.create_rectangle(tile.x,tile.y,tile.x+TILE,tile.y+TILE,fill="green")
+
+    if game.gameover:
+        canvas.create_text(WINDOW_WIDTH/2,WINDOW_HEIGHT/2-20,FOND="Arial 20",text=f"GAME OVER | SCORE: {game.score}",fill="white")
+        canvas.create_text(WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 20, font="Arial 12", text="Press R to Restart", fill="yellow")
+
+    else:
+        canvas.create_text(30,20,font="Arial 10",text=f"Score:{game.score}",fill="white")
+
+    window.after(150,draw)
+
+
+    #MAIN
+    if __name__ == "__main__":
+        camera_thread=threading.Thread(target=run_camera_and_control,daemon=True)
+        camera_thread.start()
+        draw()
+        window.mainloop()
+
+        print("Application closed. Clearing up resources")
