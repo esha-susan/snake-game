@@ -45,16 +45,16 @@ python3 snakecontroller.py
 
 ## System Workflow
 
-OpenCV captures frames from the webcam in real time
+- OpenCV captures frames from the webcam in real time
 
-MediaPipe Hands processes each frame and identifies 21 hand landmarks
+- MediaPipe Hands processes each frame and identifies 21 hand landmarks
 
-Landmark ID 8 (index fingertip) is extracted from the landmark array
+- Landmark ID 8 (index fingertip) is extracted from the landmark array
 
-The fingertip’s X-coordinate maps to left/right movement and Y-coordinate to up/down
+- The fingertip’s X-coordinate maps to left/right movement and Y-coordinate to up/down
 
-A distance threshold ensures only intentional fingertip movements are detected
+- A distance threshold ensures only intentional fingertip movements are detected
 
-Frame-to-frame smoothing reduces jitter and stabilizes the control input
+- Frame-to-frame smoothing reduces jitter and stabilizes the control input
 
 
