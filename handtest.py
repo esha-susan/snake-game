@@ -28,7 +28,7 @@ class handDetector():
 
     def findHands(self, frame, draw=True):
         """Processes the frame for hand detection."""
-        # Flip the frame for a mirror-like view (easier control)
+        # Flip the frame for a mirror-like view
         frame = cv2.flip(frame, 1)
         
         imgRgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
